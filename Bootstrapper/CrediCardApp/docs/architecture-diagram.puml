@@ -1,5 +1,5 @@
 @startuml
-title React Template - Architecture Design
+title React Architecture Design - CrediCard
 package src {
     folder "Presentation" {
         class  App

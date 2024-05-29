@@ -3,6 +3,8 @@
 - run **_npm install_**
 - run **_npm run dev_**
 
+![App Application](/design.png)
+
 **3. Run Backend**  
 - cd **_Boostrapper/CrediCard.Api_**
 - run **_dotnet restore_**
