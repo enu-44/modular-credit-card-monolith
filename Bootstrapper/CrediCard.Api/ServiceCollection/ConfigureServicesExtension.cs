@@ -13,6 +13,8 @@ public static class ConfigureServicesExtension
         .AddPaymentModule(configuration)
         .AddTransactionModule(configuration)
         .AddBootstrapper();
+        //Exceptions
+        services.SeptupExceptions();
         // Add services to the container.
         services.SetupControllers();
         //Api versioning

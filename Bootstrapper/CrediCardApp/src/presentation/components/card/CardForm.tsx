@@ -28,7 +28,7 @@ export const CardForm = ({ action = ActionCard.ADD, data, onUpdate, onAdd }: Car
         userId: Yup.string().required('Campo requerido'),
         cardNumber: Yup.string()
             .required('Campo requerido')
-            .min(6, ('Debe tener minimo 6 caracteres'))
+            .min(8, ('Debe tener minimo 8 caracteres'))
             .max(20, ('Debe tener maximo 20 caracteres')),
         ownerName: Yup.string()
             .required('Campo requerido')
@@ -36,8 +36,6 @@ export const CardForm = ({ action = ActionCard.ADD, data, onUpdate, onAdd }: Car
             .max(50, ('Debe tener maximo 50 caracteres')),
         expirationdate: Yup.string()
             .required('Campo requerido')
-            .min(2, ('Debe tener minimo 2 caracteres'))
-            .max(50, ('Debe tener maximo 50 caracteres'))
     });
 
     const {

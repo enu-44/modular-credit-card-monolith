@@ -15,6 +15,7 @@ public static class AppServiceExtension
             }
             app.UseHttpsRedirection();
             app.UseAuthorization();
+            app.UseExceptionHandler();
             app.MapControllers();
             app.MapFallbackToFile("/index.html");
         }
