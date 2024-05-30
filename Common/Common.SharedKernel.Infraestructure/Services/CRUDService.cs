@@ -29,7 +29,7 @@ public abstract class CRUDService<TQueryDTO, TRequestDTO, TKey, TEntity, TRepoAl
         if (getEntity != null)
             return Mapper.Map<TQueryDTO>(getEntity);
         else
-            throw new EntityNotFoundException(typeof(TEntity), id);
+            throw new GlobalCommonException(nameof(TEntity), CommonErrors.EntityNotFound(typeof(TEntity),id));
     }
 
     public async Task<TQueryDTO?> FindSingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] include)
@@ -51,7 +51,7 @@ public abstract class CRUDService<TQueryDTO, TRequestDTO, TKey, TEntity, TRepoAl
     {
         TEntity? updatedEntity = await _repository.GetByIdAsync(Convert.ToInt32(Mapper.Map<TEntity>(objDTO).Id), cancellationToken);
         if (updatedEntity == null)
-            throw new EntityNotFoundException(typeof(TEntity), Convert.ToInt32(Mapper.Map<TEntity>(objDTO).Id));
+            throw new GlobalCommonException(nameof(TEntity), CommonErrors.EntityNotFound(typeof(TEntity),Convert.ToInt32(Mapper.Map<TEntity>(objDTO).Id)));
         Mapper.Map(objDTO, updatedEntity);
         _repository.Update(updatedEntity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -62,7 +62,7 @@ public abstract class CRUDService<TQueryDTO, TRequestDTO, TKey, TEntity, TRepoAl
     {
         TEntity? updatedEntity = await _repository.FindSingleAsync(keyPredicate, cancellationToken);
         if (updatedEntity == null)
-            throw new EntityNotFoundException(typeof(TEntity), Convert.ToInt32(Mapper.Map<TEntity>(objDTO).Id));
+            throw new GlobalCommonException(nameof(TEntity), CommonErrors.EntityNotFound(typeof(TEntity)));
         Mapper.Map(objDTO, updatedEntity);
         _repository.Update(updatedEntity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -80,7 +80,7 @@ public abstract class CRUDService<TQueryDTO, TRequestDTO, TKey, TEntity, TRepoAl
     {
         TEntity? deletedEntity = await _repository.GetByIdAsync(Convert.ToInt32(Mapper.Map<TEntity>(objDTO).Id), cancellationToken);
         if (deletedEntity == null)
-            throw new EntityNotFoundException(typeof(TEntity));
+            throw new GlobalCommonException(nameof(TEntity), CommonErrors.EntityNotFound(typeof(TEntity)));
         if (autoSave)
         {
             Mapper.Map(objDTO, deletedEntity);
@@ -96,7 +96,7 @@ public abstract class CRUDService<TQueryDTO, TRequestDTO, TKey, TEntity, TRepoAl
     {
         TEntity? deletedEntity = await _repository.FindSingleAsync(keyPredicate, cancellationToken);
         if (deletedEntity == null)
-            throw new EntityNotFoundException(typeof(TEntity));
+            throw new GlobalCommonException(nameof(TEntity), CommonErrors.EntityNotFound(typeof(TEntity)));
         if (autoSave && objDTO!=null)
         {
             Mapper.Map(objDTO, deletedEntity);

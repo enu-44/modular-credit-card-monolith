@@ -10,7 +10,7 @@ public class UnknowExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        if (exception is GlobalException) return false;
+        if (exception is GlobalCommonException) return false;
         var jsonSettings = new JsonSerializerSettings
         {
             ContractResolver = new DefaultContractResolver
@@ -21,7 +21,7 @@ public class UnknowExceptionHandler : IExceptionHandler
         };
         await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(new ExceptionBase
         {
-            Key = "Modelvalidacion",
+            Key = "Unknow",
             Message = exception.Message,
             Detail = "Unhandled exception occurred",
         }, jsonSettings));

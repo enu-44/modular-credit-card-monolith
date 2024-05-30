@@ -1,5 +1,4 @@
-﻿using Common.SharedKernel.Application;
-using Common.SharedKernel.Domain;
+﻿using Common.SharedKernel.Domain;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,13 +9,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        if (exception is not GlobalException) return false;
-        ExceptionBase exceptionBase = exception.InnerException switch
-        {
-            ValidateException => buildException(exception.InnerException),
-            EntityNotFoundException => buildException(exception.InnerException),
-            _ => buildException(exception)
-        };
+        if (exception is not GlobalCommonException) return false;
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         var jsonSettings = new JsonSerializerSettings
         {
@@ -26,30 +19,18 @@ public class GlobalExceptionHandler : IExceptionHandler
             },
             Formatting = Formatting.Indented
         };
-        await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(exceptionBase, jsonSettings));
+        await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(buildException((GlobalCommonException)exception), jsonSettings));
         return true;
     }
 
-    public ExceptionBase buildException(Exception exception){
-        ExceptionBase exceptionBase = exception switch
+    public ExceptionBase buildException(GlobalCommonException exception)
+    {
+        var finalException = new ExceptionBase
         {
-            ValidateException => new ExceptionBase
-            {
-                Key = ((ValidateException)exception).Error.Code,
-                Message = exception.Message,
-                Detail = ((ValidateException)exception).Error.ToString(),
-            },
-            EntityNotFoundException => new ExceptionBase
-            {
-                Key = "EntityNotFound",
-                Message = exception.Message,
-            },
-            _ => new ExceptionBase
-            {
-                Key = "Unknow exception",
-                Message = exception.Message
-            }
+            Key = exception.Error?.Code ?? "Unknow",
+            Message = exception.Message,
+            Detail = exception?.Error?.ToString() ?? ""
         };
-        return exceptionBase;
+        return finalException;
     }
 }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Common.SharedKernel.Domain;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Common.SharedKernel.Application;
@@ -20,7 +21,8 @@ public sealed class ExceptionHandlingPipelineBehavior<TRequest, TResponse>(
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled exception for {RequestName}", typeof(TRequest).Name);
-            throw new GlobalException(typeof(TRequest).Name,  exception);
+            if (exception is GlobalCommonException) throw;
+            throw new GlobalCommonException(typeof(TRequest).Name,  exception);
         }
     }
 }

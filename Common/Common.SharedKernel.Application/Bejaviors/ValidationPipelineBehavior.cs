@@ -20,8 +20,7 @@ public sealed class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineB
             var context = new ValidationContext<TRequest>(request);
             var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
             var failures = validationResults.SelectMany(r => r.Errors).Where(error => error != null).ToList();
-            if (failures.Count != 0) throw new ValidateException(failures.InvalidModel());
-
+            if (failures.Count != 0) throw new GlobalCommonException(typeof(TRequest).Name, failures.InvalidModel());
             return await next();
         }
     }

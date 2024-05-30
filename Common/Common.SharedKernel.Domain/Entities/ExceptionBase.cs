@@ -6,5 +6,5 @@ public class ExceptionBase
     public string Key { get; set; }
     public string Message { get; set; }
     public string? StackTrace { get; set; }
-    public object Data { get; set; }
+    public object? Data { get; set; }
 }
