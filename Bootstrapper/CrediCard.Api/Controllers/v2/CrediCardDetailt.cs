@@ -1,4 +1,6 @@
 ﻿using Asp.Versioning;
+using Cards.Api;
+using Cards.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Transaction.Application;
@@ -8,7 +10,7 @@ namespace CrediCard.Api;
 [ApiVersion("2.0")]
 [Route("api/bff/v{version:apiVersion}/[controller]/[action]")]
 [ApiController]
-public class CrediCardDetailt(IMediator _mediator): ControllerBase
+public class CrediCardDetailt(IMediator _mediator, ICardIntegrationApi _cardIntegrationApi): ControllerBase
 {
     [HttpGet("{userId}/{cardNumber}")]
     [ProducesResponseType(typeof(IEnumerable<DetailTransactionDTO>), StatusCodes.Status200OK)]
@@ -23,6 +25,11 @@ public class CrediCardDetailt(IMediator _mediator): ControllerBase
         });
         return mapper;
     }
+
+    [HttpGet("{userId}")]
+    [ProducesResponseType(typeof(IEnumerable<CardResponseDTO>), StatusCodes.Status200OK)]
+    public Task<IEnumerable<CardResponseDTO>> GetAllCardsByUser([FromRoute] Guid userId) => 
+        _cardIntegrationApi.GetAllByUserAsync(userId);
 }
 
 
