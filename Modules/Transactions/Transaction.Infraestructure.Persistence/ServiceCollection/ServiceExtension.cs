@@ -12,6 +12,8 @@ public static class ServiceExtension
     public static void AddInfraestructurePersistenceLayer(this IServiceCollection services, IConfiguration configuration)
     {
         var db = configuration.GetSection("Transaction:Database").Value;
+        var dbMongo = configuration.GetSection("Transaction:MongoDB").Value;
+
         services.AddDbContext<TransactionDbContext>(options => {
                 options.UseNpgsql(db,
                 b => b.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Transaction));
@@ -23,5 +25,14 @@ public static class ServiceExtension
         //UnitOfWork and Factory
         services.AddScoped<IDbFactory<TransactionDbContext>, DbFactory<TransactionDbContext>>();
         services.AddScoped<IUnitOfWork<TransactionDbContext>, UnitOfWork<TransactionDbContext>>();
+
+        
+        //Mongo
+        services.AddDbContextPool<TransactionMongoDbContext>(options =>
+        {
+            options.UseMongoDB(dbMongo, "credicard");
+        });
+        
+        
     }
 }

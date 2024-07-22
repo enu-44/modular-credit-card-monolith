@@ -14,5 +14,10 @@ public static class ServiceExtension
         // DI - IOC
         services.AddScoped<ITransactionRepository<TransactionDbContext>, TransactionRepository>();
         services.AddScoped<ITransactionService, TransactionService>();
+
+        //Mongo
+        services.AddScoped<ITransactionMongoRepository<TransactionMongoDbContext>, TransactionMongoRepository>();
+        services.AddScoped<ITransactionMongoService, TransactionMongoService>();
+
     }
 }

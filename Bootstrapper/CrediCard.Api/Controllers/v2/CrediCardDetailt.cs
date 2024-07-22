@@ -15,7 +15,7 @@ public class CrediCardDetailt(IMediator _mediator, ICardIntegrationApi _cardInte
     [HttpGet("{userId}/{cardNumber}")]
     [ProducesResponseType(typeof(IEnumerable<DetailTransactionDTO>), StatusCodes.Status200OK)]
     public async  Task<IEnumerable<DetailTransactionDTO>> AllByUser([FromRoute] Guid userId, string cardNumber ) {
-        var result = await _mediator.Send(new GetAllTransactionsQuery(userId, cardNumber));
+        var result = await _mediator.Send(new GetAllByUserTransactionsQuery(userId, cardNumber));
         var mapper = result.Select(transaccion => new DetailTransactionDTO
         {
             Amount = transaccion.Amount,

@@ -13,5 +13,10 @@ internal class TransactionController(IMediator _mediatr): ControllerBase
     [HttpGet("{userId}/{cardNumber}")]
     [ProducesResponseType(typeof(IEnumerable<TransactionResponseDTO>), StatusCodes.Status200OK)]
     public Task<IEnumerable<TransactionResponseDTO>> AllByUser([FromRoute] Guid userId, string cardNumber ) => 
-        _mediatr.Send(new GetAllTransactionsQuery(userId, cardNumber));
+        _mediatr.Send(new GetAllByUserTransactionsQuery(userId, cardNumber));
+
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<TransactionResponseDTO>), StatusCodes.Status200OK)]
+    public Task<IEnumerable<TransactionResponseDTO>> All() => 
+        _mediatr.Send(new GetAllTransactionsQuery());
 }
